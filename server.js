@@ -8,36 +8,54 @@ app.listen(3000, function () {
   console.log('listening on 3000');
 });
 
-// Make sure you place body-parser before your CRUD handlers!
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.set('view engine', 'ejs');
-
 MongoClient.connect('', { useUnifiedTopology: true }).then((client) => {
   console.log('Connected to Database');
   const db = client.db('crud-quotes');
   const quotesCollection = db.collection('quotes');
+  // ========================
+  // Middlewares
+  // ========================
+  app.set('view engine', 'ejs');
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+  app.use(express.static('public'));
 
-  console.log('console1');
-
-  app.post('/quotes', (req, res) => {
-    quotesCollection
-      .insertOne(req.body)
-      .then((res) => {
-        res.redirect('/');
-        console.log('May Node be with you');
-      })
-      .catch((error) => console.error(error));
-  });
-  console.log('console2');
+  // ========================
+  // Routes
+  // ========================
   app.get('/', (req, res) => {
     db.collection('quotes')
       .find()
       .toArray()
-      .then((results) => {
-        res
-          .render('index.ejs', { quotes: results })
-          .catch((error) => console.error(error));
-      });
+      .then((quotes) => {
+        res.render('index.ejs', { quotes: quotes });
+      })
+      .catch((error) => console.error(error));
+  });
+
+  app.post('/quotes', (req, res) => {
+    quotesCollection
+      .insertOne(req.body)
+      .then((result) => {
+        res.redirect('/');
+      })
+      .catch((error) => console.error(error));
+  });
+  app.put('/quotes', (req, res) => {
+    quotesCollection
+      .findOneAndUpdate(
+        { name: 'Yoda' },
+        {
+          $set: {
+            name: req.body.name,
+            quote: req.body.quote,
+          },
+        },
+        {
+          upsert: true,
+        }
+      )
+      .then((result) => console.log(result))
+      .catch((error) => console.error(error));
   });
 });
