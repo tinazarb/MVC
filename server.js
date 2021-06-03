@@ -18,6 +18,8 @@ MongoClient.connect('', { useUnifiedTopology: true }).then((client) => {
   const db = client.db('crud-quotes');
   const quotesCollection = db.collection('quotes');
 
+  console.log('console1');
+
   app.post('/quotes', (req, res) => {
     quotesCollection
       .insertOne(req.body)
@@ -27,6 +29,7 @@ MongoClient.connect('', { useUnifiedTopology: true }).then((client) => {
       })
       .catch((error) => console.error(error));
   });
+  console.log('console2');
   app.get('/', (req, res) => {
     db.collection('quotes')
       .find()
