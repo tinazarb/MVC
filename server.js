@@ -73,3 +73,14 @@ MongoClient.connect('', { useUnifiedTopology: true }).then((client) => {
       .catch((error) => console.error(error));
   });
 });
+
+    // ========================
+    // Listen
+    // ========================
+    const isProduction = process.env.NODE_ENV === 'production';
+    const port = isProduction ? 7500 : 3000;
+    app.listen(port, function () {
+      console.log(`listening on ${port}`);
+    });
+  })
+  .catch(console.error);
