@@ -1,11 +1,13 @@
 {
-  "name": "mvc",
+  "name": "mvp",
   "version": "1.0.0",
-  "description": "",
+  "description": "MVP demo",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+ "scripts": {
+    "start": "node pm2.js",
+    "restart": "node pm2.js crud-demo --update-env",
+    "dev": "nodemon server.js",
+    "sync": "node sync.js"
   },
   "author": "",
   "license": "ISC",
